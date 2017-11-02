@@ -3,7 +3,8 @@ package main;
 public class Driver {
 
 	public static void main(String[] args) {
-		UWECImage im = new UWECImage("C:\\Users\\tofer\\Documents\\Workspace_335\\SeamCarving\\src\\cat.jpg");
+//		UWECImage im = new UWECImage("C:\\Users\\tofer\\Documents\\Workspace_335\\SeamCarving\\src\\cat.jpg");
+		UWECImage im = new UWECImage("/home/cjtrojan3/Documents/SeamCarving/src/cat.jpg");
 		long[][] powers = new long[im.getWidth()][im.getHeight()];
 		
 		//Find the powers of each pixel
@@ -53,12 +54,21 @@ public class Driver {
 	}
 	
 	private static long calculatePower(long[][] powers, int i) {
-		int depth = powers.length;
-		long runningTotal = powers[i][depth];
+		int depth = 720;		//Needs to be the height of the image.
+		long runningTotal = powers[i-1][depth-1];
 		
 		//While we aren't at the top of the image
 		while(depth >= 1){
-			runningTotal += Math.min(Math.min(powers[i-1][depth-1], powers[i][depth-1]), powers[i+1][depth-1]);
+			//Edge of picture checks.
+			if(i>=2 && i<(powers.length-1)) {
+				runningTotal += Math.min(Math.min(powers[i-1][depth-1], powers[i][depth-1]), powers[i+1][depth-1]);
+			}
+			else if(i == 1) {
+				runningTotal += Math.min(powers[i][depth-1], powers[i+1][depth-1]);
+			}
+			else {
+				runningTotal += Math.min(powers[i-1][depth-1], powers[i][depth-1]);
+			}
 			depth--;
 		}
 		return runningTotal;
